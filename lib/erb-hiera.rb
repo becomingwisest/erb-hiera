@@ -47,7 +47,7 @@ module ErbHiera
   private
 
   def self.generate(out_file, manifest)
-    Manifest.info(manifest, out_file) if options[:verbose]
+    Manifest.info(manifest, out_file) if options[:verbose] || options[:info]
 
     erb = ERB.new(File.read(manifest), nil, "-").result(Hiera.get_binding)
 

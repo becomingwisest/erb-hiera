@@ -3,7 +3,7 @@ require "hiera"
 module ErbHiera
   module Hiera
     def self.hiera(key)
-      hiera = ::Hiera.new(:config => ErbHiera.options[:hiera_config])
+      hiera = ErbHiera.hiera
       ::Hiera.logger = "noop"
       value = hiera.lookup(key, nil, ErbHiera.scope, nil, :priority)
 
@@ -17,7 +17,7 @@ module ErbHiera
     end
 
     def self.hiera_array(key)
-      hiera = ::Hiera.new(:config => ErbHiera.options[:hiera_config])
+      hiera = ErbHiera.hiera
       ::Hiera.logger = "noop"
       value = hiera.lookup(key, nil, ErbHiera.scope, nil, :array)
 
@@ -31,7 +31,7 @@ module ErbHiera
     end
 
     def self.hiera_hash(key)
-      hiera = ::Hiera.new(:config => ErbHiera.options[:hiera_config])
+      hiera = ErbHiera.hiera
       ::Hiera.logger = "noop"
       value = hiera.lookup(key, nil, ErbHiera.scope, nil, :hash)
 

@@ -21,6 +21,9 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency     "hiera"
   spec.add_runtime_dependency     "trollop"
+  spec.add_runtime_dependency     "opentelemetry-sdk"
+  spec.add_runtime_dependency     "opentelemetry-exporter-otlp"
+  spec.add_runtime_dependency     "opentelemetry-instrumentation-net_http"
 
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"

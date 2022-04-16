@@ -6,11 +6,17 @@ module ErbHiera
       @hiera = ::Hiera.new(:config => ErbHiera.options[:hiera_config])
       @scope = scope
       @verbose = verbose
+      @cache = {}
     end
     def hiera(key)
       ::Hiera.logger = "noop"
-      value = @hiera.lookup(key, nil, @scope, nil, :priority)
 
+      if @cache.has_key?("single_#{key}") then
+        value = @cache["single_#{key}"]
+      else
+        value = @hiera.lookup(key, nil, @scope, nil, :priority)
+        @cache["single_#{key}"] = value
+      end
       unless value
         puts "\nerror: cannot find value for key: #{key}"
         exit 1

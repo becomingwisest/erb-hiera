@@ -23,6 +23,8 @@ module ErbHiera
       input           = mapping["dir"]["input"]
       output          = mapping["dir"]["output"]
 
+      @erb_functions = Functions.new(options[:hiera_config],mapping["scope"],options[:verbose])
+
       [:input, :output].each do |location|
         raise StandardError, "error: undefined #{dir.to_s.split('_')[0]}put" unless binding.local_variable_get(location)
       end
@@ -49,8 +51,7 @@ module ErbHiera
   def self.generate(out_file, manifest)
     Manifest.info(manifest, out_file) if options[:verbose] || options[:info]
 
-    erb_functions = Functions.new(options[:hiera_config],ErbHiera.scope,options[:verbose])
-    erb = ERB.new(File.read(manifest), nil, "-").result(erb_functions.get_binding)
+    erb = ERB.new(File.read(manifest), nil, "-").result(@erb_functions.get_binding)
 
     puts erb if options[:verbose]
 

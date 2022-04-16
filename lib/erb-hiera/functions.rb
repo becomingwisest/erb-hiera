@@ -20,7 +20,7 @@ module ErbHiera
       value
     end
 
-    def self.hiera_array(key)
+    def hiera_array(key)
       ::Hiera.logger = "noop"
       value = @hiera.lookup(key, nil, @scope, nil, :array)
 
@@ -33,7 +33,7 @@ module ErbHiera
       value
     end
 
-    def self.hiera_hash(key)
+    def hiera_hash(key)
       ::Hiera.logger = "noop"
       value = @hiera.lookup(key, nil, @scope, nil, :hash)
 
@@ -46,7 +46,7 @@ module ErbHiera
       value
     end
 
-    def self.get_binding
+    def get_binding
       binding
     end
   end

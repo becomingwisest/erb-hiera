@@ -7,7 +7,7 @@ require "fileutils"
 require "erb-hiera/version"
 require "erb-hiera/cli"
 require "erb-hiera/directory"
-require "erb-hiera/hiera"
+require "erb-hiera/functions"
 require "erb-hiera/manifest"
 
 module ErbHiera
@@ -49,7 +49,8 @@ module ErbHiera
   def self.generate(out_file, manifest)
     Manifest.info(manifest, out_file) if options[:verbose] || options[:info]
 
-    erb = ERB.new(File.read(manifest), nil, "-").result(Hiera.get_binding)
+    erb_functions = Functions.new(options[:hiera_config],ErbHiera.scope,options[:verbose])
+    erb = ERB.new(File.read(manifest), nil, "-").result(erb_functions.get_binding)
 
     puts erb if options[:verbose]
 

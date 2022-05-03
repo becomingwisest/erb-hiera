@@ -1,10 +1,10 @@
 module ErbHiera
   module Manifest
-    def self.info(manifest, out_file)
+    def self.info(manifest, out_file, scope)
       puts heading(out_file)
       puts "#"
       puts "# scope:"
-      puts "#{ErbHiera.scope.to_yaml.to_s.gsub(/^/, '# ')}"
+      puts "#{scope.to_yaml.to_s.gsub(/^/, '# ')}"
       puts "#"
       puts "# in:  #{manifest}"
       puts "# out: #{out_file}"

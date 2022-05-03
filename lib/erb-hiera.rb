@@ -12,17 +12,18 @@ require "erb-hiera/manifest"
 
 module ErbHiera
   class << self
-    attr_accessor :options, :scope, :cache
+    attr_accessor :options
   end
 
   def self.run
     @options = CLI.parse
 
     mappings.each do |mapping|
-      ErbHiera.scope  = mapping["scope"]
-      input           = mapping["dir"]["input"]
-      output          = mapping["dir"]["output"]
-      @cache          = {}
+      scope       = mapping["scope"]
+      input       = mapping["dir"]["input"]
+      output      = mapping["dir"]["output"]
+      local_hiera = ::Hiera.new(:config => @options[:hiera_config])
+      erb_hiera   = ErbHiera::Hiera.new(scope, @options[:verbose], local_hiera)
 
       [:input, :output].each do |location|
         raise StandardError, "error: undefined #{dir.to_s.split('_')[0]}put" unless binding.local_variable_get(location)
@@ -37,7 +38,7 @@ module ErbHiera
       # otherwise the input/output are directories and all files should be processed..
       manifests(input).each do |manifest|
         out_file = File.join(output, manifest.gsub(input, ""))
-        generate(out_file, manifest)
+        generate(out_file, manifest, scope, erb_hiera)
       end
     end
   rescue => error
@@ -47,10 +48,10 @@ module ErbHiera
 
   private
 
-  def self.generate(out_file, manifest)
-    Manifest.info(manifest, out_file) if options[:verbose] || options[:info]
+  def self.generate(out_file, manifest, scope, erb_hiera)
+    Manifest.info(manifest, out_file, scope) if options[:verbose] || options[:info]
 
-    erb = ERB.new(File.read(manifest), nil, "-").result(Hiera.get_binding)
+    erb = ERB.new(File.read(manifest), nil, "-").result(erb_hiera.get_binding())
 
     puts erb if options[:verbose]
 

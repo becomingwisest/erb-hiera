@@ -12,7 +12,7 @@ require "erb-hiera/manifest"
 
 module ErbHiera
   class << self
-    attr_accessor :options, :scope
+    attr_accessor :options, :scope, :cache
   end
 
   def self.run
@@ -22,6 +22,7 @@ module ErbHiera
       ErbHiera.scope  = mapping["scope"]
       input           = mapping["dir"]["input"]
       output          = mapping["dir"]["output"]
+      @cache          = {}
 
       [:input, :output].each do |location|
         raise StandardError, "error: undefined #{dir.to_s.split('_')[0]}put" unless binding.local_variable_get(location)

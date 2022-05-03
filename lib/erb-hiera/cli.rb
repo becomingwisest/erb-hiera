@@ -12,11 +12,11 @@ module ErbHiera
         opt :dry_run,      "don't write out files"
       end
 
-      options = Optimist::with_standard_exception_handling(option_parser) do
+      options = Optimist::with_standard_exception_handling(p) do
         # show help if no cli args are provided
         raise Optimist::HelpNeeded if ARGV.empty?
 
-        option_parser.parse ARGV
+        p.parse ARGV
       end
 
       # validate cli args
